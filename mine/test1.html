@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="../dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<p>{{ message }}</p>
+		<input v-model="message">
+		<button v-on:click="revertMessage">Revert Message</button>
+		<button v-on:click="addTodo">Add</button>
+		<p>
+			<input type="text" v-model="words">
+			<button v-on:click="addWords">Add</button>
+			<button v-on:click="reduceWords">Reduce</button>
+		</p>
+		<p>
+			<label v-if="odd">奇数条数据</label>
+			<label v-else>偶数条数据</label>
+		</p>
+
+		<p><label>{{ allWords }}</label></p>
+		<p>现在共有{{ count }}条数据</p>
+
+		<table>
+			<tr v-for="todo in todos">
+				<td>{{ todo.text }}</td>
+				<td><button v-on:click="removeTodo($index)">X</button></td>
+				<td><button v-on:click="editTodo($index)">eidt</button></td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+<script>
+	var vm = new Vue({
+		el: '#app',
+		methods: {
+			revertMessage: function () {
+				this.message = this.message.split('').reverse().join('');
+			},
+			removeTodo: function (index) {
+				this.todos.splice(index, 1);
+			},
+			addTodo: function () {
+				this.todos.push({text: this.message});
+			},
+			addWords: function () {
+				for (var i in this.todos) {
+					this.todos[i].text += this.words
+				}
+			},
+			reduceWords: function () {
+				for (var i in this.todos) {
+					this.todos[i].text = this.todos[i].text.split(this.words).join('');
+				}
+			},
+			editTodo: function (index) {
+				this.todos[index].text = this.message;
+			}
+		},
+		data: {
+			message: 'Sid',
+			words: '',
+			todos: [
+				{ text: 'Torry'},
+				{ text: 'Jerry'},
+				{ text: 'Sophia'},
+				{ text: 'Dothin'},
+				{ text: 'Albert'}
+			]
+		},
+		computed: {
+			odd: function () {
+				return this.todos.length % 2 == 1;
+			},
+			count: function () {
+				return this.todos.length;
+			},
+			allWords: function () {
+				var result = '';
+				for (var w in this.todos) {
+					result += this.todos[w].text + '; ';
+				}
+				return result;
+			}
+		}
+	});
+</script>
+</html>
